@@ -7,11 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="NLog.Extensions.Logging" Version="5.0.0-rc2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="GlobalUsings.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Contracts\Contracts.csproj" />
+      <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
     </ItemGroup>
 
 </Project>
