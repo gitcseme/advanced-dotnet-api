@@ -1,5 +1,6 @@
 using Contracts;
 using LoggerService;
+using Repository;
 using LogLevel = NLog.LogLevel;
 
 namespace CompanyEmployees.Extensions;
@@ -37,5 +38,10 @@ public static class ServiceExtensions
         
         // Add Logger in IOC
         services.AddSingleton<ILoggerManager, LoggerManager>();
+    }
+
+    public static void ConfigureRepositoryManager(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }
