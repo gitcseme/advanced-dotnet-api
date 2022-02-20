@@ -13,4 +13,8 @@ public class ServiceManager : IServiceManager
 		_companyService = new Lazy<ICompanyService>(() => new CompanyService(repositoryManager, loggerManager));
 		_employeeService = new Lazy<IEmployeeService>(() => new EmployeeService(repositoryManager, loggerManager));
 	}
+
+	public ICompanyService CompanyService => _companyService.Value;
+
+	public IEmployeeService EmployeeService => _employeeService.Value;
 }
