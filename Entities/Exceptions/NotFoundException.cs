@@ -11,6 +11,13 @@ public class CompanyNotFoundException : NotFoundException
     public CompanyNotFoundException(Guid companyId)
         :base(string.Format("company with id: {0} doesn't exists", companyId))
     {
+    }
+}
 
+public class EmployeeNotFoundException : NotFoundException
+{
+    public EmployeeNotFoundException(Guid employeeId)
+        :base(string.Format("Employee with id {0} doesn't exists", employeeId))
+    {
     }
 }

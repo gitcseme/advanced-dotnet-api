@@ -17,8 +17,6 @@ public class CompaniesController : ControllerBase
     [HttpGet]
     public IActionResult GetCompanies()
     {
-        throw new Exception("custom exception");
-
         var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
         return Ok(companies);
     }
