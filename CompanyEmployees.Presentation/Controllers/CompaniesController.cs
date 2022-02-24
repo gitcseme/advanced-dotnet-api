@@ -17,15 +17,17 @@ public class CompaniesController : ControllerBase
     [HttpGet]
     public IActionResult GetCompanies()
     {
-        try
-        {
-            var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
-            return Ok(companies);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal server error");
-        }
+        throw new Exception("custom exception");
+
+        var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
+        return Ok(companies);
+    }
+
+    [HttpGet("{id:guid}")]
+    public IActionResult GetCompany(Guid id)
+    {
+        var company = _service.CompanyService.GetCompany(id, trackChanges: false);
+        return Ok(company);
     }
 }
 

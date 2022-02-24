@@ -15,4 +15,12 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
             .OrderBy(c => c.Name)
             .ToList();
     }
+
+    public Company? GetCompany(Guid companyId, bool trackChanges)
+    {
+        var company = Find(c => c.Id.Equals(companyId), trackChanges)
+            .SingleOrDefault();
+
+        return company;
+    }
 }
