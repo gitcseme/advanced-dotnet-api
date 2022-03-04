@@ -20,7 +20,8 @@ builder.Services.AddControllers(config =>
     config.ReturnHttpNotAcceptable = true;
 })
     .AddXmlDataContractSerializerFormatters()
-    .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
+    .AddCustomCsvFormatter()
+.AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
