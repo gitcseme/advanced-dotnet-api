@@ -18,6 +18,12 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
             .ToList();
     }
 
+    public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+    {
+        return Find(c => ids.Contains(c.Id), trackChanges)
+            .ToList();
+    }
+
     public Company? GetCompany(Guid companyId, bool trackChanges)
     {
         var company = Find(c => c.Id.Equals(companyId), trackChanges)

@@ -31,12 +31,43 @@ internal sealed class CompanyService : ICompanyService
         return _mapper.Map<CompanyDto>(companyEntity);
     }
 
+    public (IEnumerable<CompanyDto> companies, string ids) CreateCompanyCollection(IEnumerable<CompanyCreateDto> companyCollection)
+    {
+        if (companyCollection is null)
+            throw new CompanyCollectionBadRequest();
+
+        var companyEntities = _mapper.Map<IEnumerable<Company>>(companyCollection);
+        foreach (var company in companyEntities)
+        {
+            _repository.Companies.CreateCompany(company);
+        }
+
+        _repository.Save();
+
+        var companyCollectionTopReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
+        var ids = string.Join(",", companyCollectionTopReturn.Select(c => c.Id));
+
+        return (companyCollectionTopReturn, ids);
+    }
+
     public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
     {
         var companies = _repository.Companies.GetAllCompanies(trackChanges);
         var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
 
         return companiesDto;
+    }
+
+    public IEnumerable<CompanyDto> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+    {
+        if (ids is null)
+            throw new IdParametersBadRequestException();
+
+        var companyEntities = _repository.Companies.GetByIds(ids, trackChanges);
+        if (ids.Count() != companyEntities.Count())
+            throw new CollectionByIdsBadRequestException();
+
+        return _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
     }
 
     public CompanyDto GetCompany(Guid companyId, bool trackChanges)

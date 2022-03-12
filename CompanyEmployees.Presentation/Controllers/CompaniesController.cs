@@ -39,5 +39,20 @@ public class CompaniesController : ControllerBase
 
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
     }
+
+
+    [HttpGet("collection/({ids})", Name = "CompanyCollection")]
+    public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
+    {
+        var companies = _service.CompanyService.GetByIds(ids, false);
+        return Ok(companies);
+    }
+
+    [HttpPost("collection")]
+    public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyCreateDto> companyCollection)
+    {
+        var result = _service.CompanyService.CreateCompanyCollection(companyCollection);
+        return CreatedAtRoute("CompanyCollection", new { result.ids }, result.companies);
+    }
 }
 
