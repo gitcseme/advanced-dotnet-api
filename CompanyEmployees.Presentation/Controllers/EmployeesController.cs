@@ -26,7 +26,7 @@ public class EmployeesController : ControllerBase
     public IActionResult GetEmployeeForCompany(Guid companyId, Guid employeeId)
     {
         var employee = _service.EmployeeService.GetEmployee(companyId, employeeId, trackChanges: false);
-        return Ok(employee);
+        return Ok(employee); // 200
     }
 
     [HttpPost]
@@ -37,7 +37,25 @@ public class EmployeesController : ControllerBase
 
         var employeeToReturn = _service.EmployeeService.CreateEmployeeForCompany(companyId, employee, false);
 
-        return CreatedAtRoute("GetEmployeeForCompany", new { companyId, employeeId = employeeToReturn.Id }, employeeToReturn);
+        return CreatedAtRoute("GetEmployeeForCompany", new { companyId, employeeId = employeeToReturn.Id }, employeeToReturn); // 201
+    }
+
+    [HttpDelete("{employeeId:guid}")]
+    public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid employeeId)
+    {
+        _service.EmployeeService.DeleteEmployeeForCompany(companyId, employeeId, false);
+        return NoContent(); // 204
+    }
+
+    [HttpPut("{employeeId:guid}")]
+    public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid employeeId, [FromBody] EmployeeUpdateDto employee)
+    {
+        if (employee is null)
+            return BadRequest("EmployeeUpdateDto is null");
+
+        _service.EmployeeService.UpdateEmployeeForComapny(companyId, employeeId, employee, false, true);
+
+        return NoContent(); // 204
     }
 }
 

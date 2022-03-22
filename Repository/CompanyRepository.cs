@@ -11,6 +11,8 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
 
     public void CreateCompany(Company company) => Create(company);
 
+    public void DeleteCompany(Company company) => Delete(company);
+
     public IEnumerable<Company> GetAllCompanies(bool trackChanges)
     {
         return FindAll(trackChanges)

@@ -41,7 +41,6 @@ public class CompaniesController : ControllerBase
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
     }
 
-
     [HttpGet("collection/({ids})", Name = "CompanyCollection")]
     public IActionResult GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
     {
@@ -55,4 +54,12 @@ public class CompaniesController : ControllerBase
         var result = _service.CompanyService.CreateCompanyCollection(companyCollection);
         return CreatedAtRoute("CompanyCollection", new { result.ids }, result.companies);
     }
+
+    [HttpDelete("{companyId:guid}")]
+    public IActionResult DeleteCompany(Guid companyId)
+    {
+        _service.CompanyService.DeleteCompany(companyId, trackChanges: false);
+        return NoContent();
+    }
+
 }

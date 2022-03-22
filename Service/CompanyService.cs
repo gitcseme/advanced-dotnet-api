@@ -50,6 +50,16 @@ internal sealed class CompanyService : ICompanyService
         return (companyCollectionTopReturn, ids);
     }
 
+    public void DeleteCompany(Guid companyId, bool trackChanges)
+    {
+        var company = _repository.Companies.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        _repository.Companies.DeleteCompany(company);
+        _repository.Save();
+    }
+
     public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
     {
         var companies = _repository.Companies.GetAllCompanies(trackChanges);

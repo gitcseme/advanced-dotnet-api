@@ -7,7 +7,7 @@ using Shared.DataTransferObjects;
 
 namespace Service;
 
-internal sealed class EmployeeService : IEmployeeService
+public sealed class EmployeeService : IEmployeeService
 {
 	private readonly IRepositoryManager _repository;
 	private readonly ILoggerManager _logger;
@@ -33,6 +33,20 @@ internal sealed class EmployeeService : IEmployeeService
         return _mapper.Map<EmployeeDto>(employeeEntity);
     }
 
+    public void DeleteEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
+    {
+        var company = _repository.Companies.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employee = _repository.Employees.GetEmployee(companyId, employeeId, trackChanges);
+        if (employee is null)
+            throw new EmployeeNotFoundException(employeeId);
+
+        _repository.Employees.DeleteEmployee(employee);
+        _repository.Save();
+    }
+
     public EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges)
     {
         var company = _repository.Companies.GetCompany(companyId, trackChanges);
@@ -56,5 +70,20 @@ internal sealed class EmployeeService : IEmployeeService
         var employees = _repository.Employees.GetEmployees(companyId, trackChanges);
         var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
         return employeesDto;
+    }
+
+    public void UpdateEmployeeForComapny(Guid companyId, Guid employeeId, EmployeeUpdateDto updateDto, 
+        bool cmpTrackChanges, bool empTrackChanges)
+    {
+        var company = _repository.Companies.GetCompany(companyId, cmpTrackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employeeEntity = _repository.Employees.GetEmployee(companyId, employeeId, empTrackChanges);
+        if (employeeEntity is null)
+            throw new EmployeeNotFoundException(employeeId);
+
+        _mapper.Map(updateDto, employeeEntity);
+        _repository.Save();
     }
 }
