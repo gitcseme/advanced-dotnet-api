@@ -88,4 +88,14 @@ internal sealed class CompanyService : ICompanyService
 
         return _mapper.Map<CompanyDto>(company);
     }
+
+    public void UpdateCompany(Guid companyId, CompanyUpdateDto updateDto, bool trackChanges)
+    {
+        var companyEntity = _repository.Companies.GetCompany(companyId, trackChanges);
+        if (companyEntity is null)
+            throw new CompanyNotFoundException(companyId);
+
+        _mapper.Map(updateDto, companyEntity);
+        _repository.Save();
+    }
 }

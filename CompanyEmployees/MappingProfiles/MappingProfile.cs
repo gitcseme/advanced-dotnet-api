@@ -14,6 +14,7 @@ public class MappingProfile : Profile
             opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
         CreateMap<CompanyCreateDto, Company>();
+        CreateMap<CompanyUpdateDto, Company>();
 
         CreateMap<Employee, EmployeeDto>();
         CreateMap<EmployeeCreateDto, Employee>();
