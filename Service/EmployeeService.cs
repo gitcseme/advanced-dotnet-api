@@ -61,6 +61,19 @@ public sealed class EmployeeService : IEmployeeService
         return employeeDto;
     }
 
+    public (EmployeeUpdateDto employeeToPatch, Employee employeeEntity) GetEmployeeForPatch(
+        Guid companyId, Guid employeeId, bool cmpTrackChanges, bool empTrackChanges)
+    {
+        var company = _repository.Companies.GetCompany(companyId, cmpTrackChanges);
+        if (company is null) throw new CompanyNotFoundException(companyId);
+
+        var employeeEntity = _repository.Employees.GetEmployee(companyId, employeeId, empTrackChanges); 
+        if (employeeEntity is null) throw new EmployeeNotFoundException(companyId);
+
+        var employeeToPatch = _mapper.Map<EmployeeUpdateDto>(employeeEntity);
+        return (employeeToPatch, employeeEntity);
+    }
+
     public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
     {
         var company = _repository.Companies.GetCompany(companyId, trackChanges);
@@ -70,6 +83,12 @@ public sealed class EmployeeService : IEmployeeService
         var employees = _repository.Employees.GetEmployees(companyId, trackChanges);
         var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
         return employeesDto;
+    }
+
+    public void SaveChangesForPatch(EmployeeUpdateDto employeeToPatch, Employee employeeEntity)
+    {
+        _mapper.Map(employeeToPatch, employeeEntity);
+        _repository.Save();
     }
 
     public void UpdateEmployeeForComapny(Guid companyId, Guid employeeId, EmployeeUpdateDto updateDto, 
